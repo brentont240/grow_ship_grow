@@ -1,0 +1,90 @@
+[gd_scene load_steps=11 format=3 uid="uid://dnhtoatfm73uq"]
+
+[ext_resource type="Script" path="res://entities/player/player.gd" id="1_gv8ho"]
+[ext_resource type="Shader" uid="uid://crdcgh67eujs5" path="res://assets/materials/hitflash.tres" id="2_xnbh4"]
+[ext_resource type="Texture2D" uid="uid://tmneb37rjt42" path="res://assets/art/playerShip.png" id="3_7fkc4"]
+[ext_resource type="Material" uid="uid://o2g4mrscfsd6" path="res://assets/materials/shipFire.tres" id="4_lm4r6"]
+[ext_resource type="PackedScene" uid="uid://cge32so1yiaqt" path="res://components/healthComponent.tscn" id="5_2o77h"]
+[ext_resource type="PackedScene" uid="uid://jt2jw82tykvy" path="res://components/hitBoxComponent.tscn" id="6_l3gyh"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_oj330"]
+shader = ExtResource("2_xnbh4")
+shader_parameter/enabled = false
+shader_parameter/Tint = Color(1, 1, 1, 1)
+
+[sub_resource type="Animation" id="Animation_7fjng"]
+length = 0.001
+
+[sub_resource type="Animation" id="Animation_tdas6"]
+resource_name = "hit_flash"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:material:shader_parameter/enabled")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ixoaw"]
+_data = {
+"RESET": SubResource("Animation_7fjng"),
+"hit_flash": SubResource("Animation_tdas6")
+}
+
+[node name="Player" type="CharacterBody2D"]
+collision_layer = 2
+collision_mask = 21
+motion_mode = 1
+script = ExtResource("1_gv8ho")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_oj330")
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("3_7fkc4")
+
+[node name="FireTrail" type="GPUParticles2D" parent="."]
+show_behind_parent = true
+position = Vector2(0, 31)
+emitting = false
+amount = 41
+process_material = ExtResource("4_lm4r6")
+
+[node name="Muzzle" type="Node2D" parent="."]
+position = Vector2(0, -40)
+
+[node name="LeftMuzzle" type="Node2D" parent="."]
+position = Vector2(-13, -40)
+
+[node name="RightMuzzle" type="Node2D" parent="."]
+position = Vector2(13, -40)
+
+[node name="SpreadMuzzle1" type="Node2D" parent="."]
+position = Vector2(-21, -35)
+
+[node name="SpreadMuzzle2" type="Node2D" parent="."]
+position = Vector2(0, -50)
+
+[node name="SpreadMuzzle3" type="Node2D" parent="."]
+position = Vector2(21, -35)
+
+[node name="HitFlashAnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_ixoaw")
+}
+
+[node name="HealthComponent" parent="." instance=ExtResource("5_2o77h")]
+
+[node name="HitboxComponent" parent="." node_paths=PackedStringArray("health_component") instance=ExtResource("6_l3gyh")]
+health_component = NodePath("../HealthComponent")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="HitboxComponent"]
+position = Vector2(-225, 184)
+polygon = PackedVector2Array(225, -217, 239, -202, 254, -152, 225, -152, 196, -153, 211, -201)
+
+[connection signal="area_entered" from="HitboxComponent" to="." method="_on_hitbox_component_area_entered"]

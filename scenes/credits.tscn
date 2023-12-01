@@ -1,0 +1,66 @@
+[gd_scene load_steps=5 format=3 uid="uid://bluvid1ftixsg"]
+
+[ext_resource type="Script" path="res://scripts/credits.gd" id="1_uphx1"]
+[ext_resource type="FontFile" uid="uid://degtbkxxog7p0" path="res://assets/fonts/DigitalNormal-xO6j.otf" id="2_6vwu1"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_s34dy"]
+font = ExtResource("2_6vwu1")
+font_size = 65
+
+[sub_resource type="LabelSettings" id="LabelSettings_m76yq"]
+line_spacing = 2.0
+
+[node name="Credits" type="Node"]
+script = ExtResource("1_uphx1")
+
+[node name="Label" type="Label" parent="."]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -107.0
+offset_top = 35.0
+offset_right = 113.0
+offset_bottom = 100.0
+grow_horizontal = 2
+text = "Credits"
+label_settings = SubResource("LabelSettings_s34dy")
+
+[node name="Label2" type="Label" parent="."]
+offset_left = 8.0
+offset_top = 54.0
+offset_right = 1126.0
+offset_bottom = 640.0
+text = "Made for Game Off 2023 Game Jam
+
+Game by Brenton Trebilcock
+
+Art:
+Art by Brenton Trebilcock
+Lasers by Wenrexa
+
+Sound Effects:
+Level Up / Enhancement 8-bit Retro Sound Effect Sound Effect by Lesiakower from Pixabay 
+medium explosion by Pixabay
+blaster 2 by Pixabay
+Anime, short and hard impact, hit from Zapsplat.com 
+
+Music:
+game music loop 3 by XtremeFreddy from Pixabay 
+Cyber Town (SimCity style music) by Pixabay 
+game music loop 5 by XtremeFreddy from Pixabay 
+instant rave by Pixabay 
+Parasite by oldways https://tunetank.com/track/5082-parasite/
+
+Fonts:
+Font Digital by coding4web
+"
+label_settings = SubResource("LabelSettings_m76yq")
+
+[node name="Button" type="Button" parent="."]
+offset_left = 949.0
+offset_top = 581.0
+offset_right = 1106.0
+offset_bottom = 612.0
+text = "Back to Main Menu"
+
+[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]

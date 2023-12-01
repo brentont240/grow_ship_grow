@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3 uid="uid://c8xlnydsyna6a"]
+
+[ext_resource type="Script" path="res://entities/powerUps/powerUps.gd" id="1_kiktd"]
+[ext_resource type="Texture2D" uid="uid://d3oh1xjonm327" path="res://assets/art/powerUp0.png" id="2_0vdup"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_44cqf"]
+radius = 21.095
+
+[node name="PowerUps" type="Area2D"]
+script = ExtResource("1_kiktd")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_0vdup")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_44cqf")
+
+[node name="LifeSpan" type="Timer" parent="."]
+wait_time = 7.0
+autostart = true
+
+[connection signal="timeout" from="LifeSpan" to="." method="_on_life_span_timeout"]

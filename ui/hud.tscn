@@ -1,0 +1,32 @@
+[gd_scene load_steps=4 format=3 uid="uid://cemdwkvhdvk65"]
+
+[ext_resource type="Script" path="res://ui/hud.gd" id="1_waryn"]
+[ext_resource type="FontFile" uid="uid://degtbkxxog7p0" path="res://assets/fonts/DigitalNormal-xO6j.otf" id="2_u3q58"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_7o44q"]
+font = ExtResource("2_u3q58")
+font_size = 30
+
+[node name="HUD" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_waryn")
+
+[node name="Growth" type="Label" parent="."]
+layout_mode = 1
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 139.0
+offset_bottom = 55.0
+text = "Growth: 0"
+label_settings = SubResource("LabelSettings_7o44q")
+
+[node name="Lives" type="HBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 57.0
+offset_right = 66.0
+offset_bottom = 122.0
+scale = Vector2(0.6, 0.6)

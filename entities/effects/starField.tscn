@@ -1,0 +1,31 @@
+[gd_scene load_steps=4 format=3 uid="uid://kx5rjn3v8tc0"]
+
+[ext_resource type="Material" uid="uid://daeyuyevcrw2u" path="res://assets/materials/starFieldParticlesBack.tres" id="1_eb64s"]
+[ext_resource type="Material" uid="uid://beadj3tlhexy" path="res://assets/materials/starFieldParticlesMiddle.tres" id="2_jnnwd"]
+[ext_resource type="Material" uid="uid://ck3iiujfg25us" path="res://assets/materials/starFieldParticlesFront.tres" id="3_8kx4p"]
+
+[node name="StarField" type="Node2D"]
+
+[node name="StarFieldBack" type="GPUParticles2D" parent="."]
+z_index = -100
+position = Vector2(1152, 324)
+amount = 1000
+process_material = ExtResource("1_eb64s")
+lifetime = 140.0
+preprocess = 280.0
+
+[node name="StarFieldMiddle" type="GPUParticles2D" parent="."]
+z_index = -95
+position = Vector2(1152, 324)
+amount = 250
+process_material = ExtResource("2_jnnwd")
+lifetime = 140.0
+preprocess = 280.0
+
+[node name="StarFieldFront" type="GPUParticles2D" parent="."]
+z_index = -90
+position = Vector2(1152, 324)
+amount = 35
+process_material = ExtResource("3_8kx4p")
+lifetime = 140.0
+preprocess = 280.0

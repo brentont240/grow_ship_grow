@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=3 uid="uid://biq31qtul40bs"]
+
+[ext_resource type="Material" uid="uid://c081r8es2kf7f" path="res://assets/materials/explosion.tres" id="1_lfi8y"]
+[ext_resource type="Script" path="res://entities/effects/explosion.gd" id="2_nh60p"]
+[ext_resource type="AudioStream" uid="uid://cn7sph0fnj5h4" path="res://assets/audio/explosion.mp3" id="3_h621g"]
+
+[node name="Explosion" type="GPUParticles2D"]
+show_behind_parent = true
+emitting = false
+amount = 100
+process_material = ExtResource("1_lfi8y")
+lifetime = 1.25
+one_shot = true
+explosiveness = 1.0
+randomness = 0.5
+script = ExtResource("2_nh60p")
+
+[node name="ExplosionSoundEffect" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_h621g")
+autoplay = true

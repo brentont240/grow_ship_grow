@@ -1,0 +1,95 @@
+[gd_scene load_steps=12 format=3 uid="uid://chh2xbmput5oy"]
+
+[ext_resource type="Script" path="res://entities/mobs/bossMob.gd" id="1_ensl5"]
+[ext_resource type="Shader" uid="uid://crdcgh67eujs5" path="res://assets/materials/hitflash.tres" id="2_h1lqj"]
+[ext_resource type="Texture2D" uid="uid://bup5khytnls3l" path="res://assets/art/bossDrone.png" id="3_6enpb"]
+[ext_resource type="PackedScene" uid="uid://jt2jw82tykvy" path="res://components/hitBoxComponent.tscn" id="4_dmn6p"]
+[ext_resource type="PackedScene" uid="uid://cge32so1yiaqt" path="res://components/healthComponent.tscn" id="5_7c25m"]
+[ext_resource type="PackedScene" uid="uid://bly45v53dam2p" path="res://components/mobComponent.tscn" id="6_yhwny"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_5eh38"]
+resource_local_to_scene = true
+shader = ExtResource("2_h1lqj")
+shader_parameter/enabled = false
+shader_parameter/Tint = Color(1, 1, 1, 1)
+
+[sub_resource type="Animation" id="Animation_05on3"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:material:shader_parameter/enabled")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="Animation" id="Animation_pceua"]
+resource_name = "hit_flash"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:material:shader_parameter/enabled")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_fekng"]
+_data = {
+"RESET": SubResource("Animation_05on3"),
+"hit_flash": SubResource("Animation_pceua")
+}
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_uot1x"]
+radius = 100.08
+
+[node name="BossMob" type="Area2D"]
+collision_layer = 4
+collision_mask = 10
+script = ExtResource("1_ensl5")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_5eh38")
+texture = ExtResource("3_6enpb")
+
+[node name="HitFlashAnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_fekng")
+}
+
+[node name="HitboxComponent" parent="." node_paths=PackedStringArray("health_component") instance=ExtResource("4_dmn6p")]
+health_component = NodePath("../HealthComponent")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitboxComponent"]
+shape = SubResource("CircleShape2D_uot1x")
+
+[node name="HealthComponent" parent="." instance=ExtResource("5_7c25m")]
+MAX_HEALTH = 35
+
+[node name="MobComponent" parent="." node_paths=PackedStringArray("health_component") instance=ExtResource("6_yhwny")]
+health_component = NodePath("../HealthComponent")
+speed_min = 125.0
+speed_max = 125.0
+scale_min = 1.0
+scale_max = 1.0
+drop_probability = 6
+mob_type = 10
+can_change_direction = true
+direction_timer = 5.5
+
+[node name="ShootTimer" type="Timer" parent="."]
+wait_time = 3.45
+autostart = true
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="timeout" from="ShootTimer" to="." method="_on_shoot_timer_timeout"]

@@ -1,0 +1,17 @@
+[gd_scene load_steps=4 format=3 uid="uid://mdrp3vaynefc"]
+
+[ext_resource type="PackedScene" uid="uid://dnhtoatfm73uq" path="res://scenes/player.tscn" id="1_kg38i"]
+[ext_resource type="Script" path="res://scripts/test.gd" id="1_ynvcc"]
+[ext_resource type="PackedScene" uid="uid://c48kmxrfnmefb" path="res://scenes/ufoMob.tscn" id="3_wngje"]
+
+[node name="Node" type="Node"]
+script = ExtResource("1_ynvcc")
+
+[node name="Player" parent="." instance=ExtResource("1_kg38i")]
+position = Vector2(599, 338)
+
+[node name="Lasers" type="Node" parent="."]
+
+[node name="UfoMob" parent="Lasers" instance=ExtResource("3_wngje")]
+position = Vector2(432, 359)
+speed = 50

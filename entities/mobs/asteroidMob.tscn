@@ -1,0 +1,75 @@
+[gd_scene load_steps=12 format=3 uid="uid://cn0aanhgbyaw2"]
+
+[ext_resource type="Script" path="res://entities/mobs/asteroidMob.gd" id="1_6olax"]
+[ext_resource type="Texture2D" uid="uid://2xms887oaheq" path="res://assets/art/asteroid.png" id="1_fce0n"]
+[ext_resource type="Shader" uid="uid://crdcgh67eujs5" path="res://assets/materials/hitflash.tres" id="2_syd71"]
+[ext_resource type="PackedScene" uid="uid://cge32so1yiaqt" path="res://components/healthComponent.tscn" id="2_u0if4"]
+[ext_resource type="PackedScene" uid="uid://bly45v53dam2p" path="res://components/mobComponent.tscn" id="3_5mb0e"]
+[ext_resource type="PackedScene" uid="uid://jt2jw82tykvy" path="res://components/hitBoxComponent.tscn" id="4_bgqgf"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_m8i7l"]
+resource_local_to_scene = true
+shader = ExtResource("2_syd71")
+shader_parameter/enabled = false
+shader_parameter/Tint = Color(1, 1, 1, 1)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ij0ol"]
+radius = 31.0
+
+[sub_resource type="Animation" id="Animation_uowj0"]
+length = 0.001
+
+[sub_resource type="Animation" id="Animation_bro8b"]
+resource_name = "hit_flash"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:material:shader_parameter/enabled")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_nr4af"]
+_data = {
+"RESET": SubResource("Animation_uowj0"),
+"hit_flash": SubResource("Animation_bro8b")
+}
+
+[node name="AsteroidMob" type="Area2D"]
+script = ExtResource("1_6olax")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_m8i7l")
+texture = ExtResource("1_fce0n")
+
+[node name="MobComponent" parent="." node_paths=PackedStringArray("health_component") instance=ExtResource("3_5mb0e")]
+health_component = NodePath("../HealthComponent")
+speed_min = 45.0
+speed_max = 155.0
+scale_min = 1.0
+scale_max = 1.2
+drop_probability = 5
+mob_type = 1
+
+[node name="HitboxComponent" parent="." node_paths=PackedStringArray("health_component") instance=ExtResource("4_bgqgf")]
+health_component = NodePath("../HealthComponent")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitboxComponent"]
+shape = SubResource("CircleShape2D_ij0ol")
+
+[node name="HealthComponent" parent="." instance=ExtResource("2_u0if4")]
+MAX_HEALTH = 1
+
+[node name="HitFlashAnimationPlayer" type="AnimationPlayer" parent="."]
+reset_on_save = false
+libraries = {
+"": SubResource("AnimationLibrary_nr4af")
+}
+
+[connection signal="is_dead" from="HealthComponent" to="." method="_on_health_component_is_dead"]

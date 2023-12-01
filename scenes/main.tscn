@@ -1,0 +1,102 @@
+[gd_scene load_steps=4 format=3 uid="uid://de6fnhxfugv26"]
+
+[ext_resource type="Texture2D" uid="uid://digulvxkeom8f" path="res://assets/art/mainBackground.png" id="1_nh4g4"]
+[ext_resource type="Script" path="res://scripts/main.gd" id="1_p7p47"]
+[ext_resource type="AudioStream" uid="uid://dj7tx6ametodp" path="res://assets/audio/level1bgMusic.mp3" id="3_v8s8h"]
+
+[node name="main" type="Node"]
+script = ExtResource("1_p7p47")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("1_nh4g4")
+
+[node name="PlayButton" type="Button" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -49.5
+offset_top = -25.5
+offset_right = 49.5
+offset_bottom = 25.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 20
+text = "Play"
+
+[node name="ControlsButton" type="Button" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -49.5
+offset_top = 44.5
+offset_right = 49.5
+offset_bottom = 95.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 20
+toggle_mode = true
+text = "Controls"
+
+[node name="CreditsButton" type="Button" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -49.5
+offset_top = 114.5
+offset_right = 49.5
+offset_bottom = 165.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 20
+text = "Credits"
+
+[node name="Controls" type="Label" parent="."]
+offset_left = 58.0
+offset_top = 238.0
+offset_right = 489.0
+offset_bottom = 499.0
+text = "Controls:
+
+Use the left and right arrows or A and D to turn the ship
+left or right. Use W or the Up arrow to move forward.
+
+Use space to shoot.
+
+For controller use the dpad or left analog stick to move 
+and use A to shoot."
+
+[node name="Instructions" type="Label" parent="."]
+offset_left = 58.0
+offset_top = 238.0
+offset_right = 489.0
+offset_bottom = 499.0
+text = "How to play:
+
+Destroy enemy ships to grow your ship. Reach the 
+necessary growth rate to go to the next level.
+
+As you grow you will become a bigger target,
+but your projectiles will also grow with you,
+making it easier to destroy enemies!"
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_v8s8h")
+autoplay = true
+
+[connection signal="pressed" from="PlayButton" to="." method="_on_play_button_pressed"]
+[connection signal="toggled" from="ControlsButton" to="." method="_on_controls_button_toggled"]
+[connection signal="pressed" from="CreditsButton" to="." method="_on_credits_button_pressed"]

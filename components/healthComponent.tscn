@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://cge32so1yiaqt"]
+
+[ext_resource type="Script" path="res://components/healthComponent.gd" id="1_se73x"]
+[ext_resource type="AudioStream" uid="uid://1gclxnktxymg" path="res://assets/audio/shipHit.mp3" id="2_c2eff"]
+
+[node name="HealthComponent" type="Node2D"]
+script = ExtResource("1_se73x")
+
+[node name="HitSoundEffect" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_c2eff")

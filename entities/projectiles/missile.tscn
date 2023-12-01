@@ -1,0 +1,97 @@
+[gd_scene load_steps=8 format=3 uid="uid://cx2lttooiwb54"]
+
+[ext_resource type="Script" path="res://entities/projectiles/missile.gd" id="1_pisyb"]
+[ext_resource type="Texture2D" uid="uid://cp7g7i8nk5uxt" path="res://assets/art/playerMissile.png" id="2_bwobb"]
+[ext_resource type="PackedScene" uid="uid://0o2jc5x87d5h" path="res://components/projectileComponent.tscn" id="3_12tpj"]
+[ext_resource type="Material" uid="uid://o2g4mrscfsd6" path="res://assets/materials/shipFire.tres" id="4_1jwbc"]
+
+[sub_resource type="Shader" id="Shader_24k3h"]
+code = "shader_type canvas_item;
+
+uniform vec4 color1 : source_color;
+uniform vec4 color2 : source_color;
+uniform float threshold;
+uniform float intensity;
+uniform float opacity;
+uniform vec4 glow_color : source_color;
+
+void fragment() {
+	// Get the pixel color from the texture
+	vec4 pixel_color = texture(TEXTURE, UV);
+	
+	// Calculate the distance between the pixel color and the first source color
+	float distance = length(pixel_color - color1);
+	
+	// Calculate the distance between the pixel color and the second source color
+	float distance_second = length(pixel_color - color2);
+	
+	// Create a new variable to store the modified glow color
+	vec4 modified_glow_color = glow_color;
+	
+	// Set the alpha value of the modified glow color to the specified opacity
+	modified_glow_color.a = opacity;
+	
+	// If the distance to either source color is below the threshold, set the output color to a blend of the pixel color and the modified glow color
+	if (distance < threshold || distance_second < threshold) {
+		COLOR = mix(pixel_color, modified_glow_color * intensity, modified_glow_color.a);
+	}
+	// Otherwise, set the output color to the pixel color
+	else {
+		COLOR = pixel_color;
+	}
+}"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_631tl"]
+shader = SubResource("Shader_24k3h")
+shader_parameter/color1 = null
+shader_parameter/color2 = null
+shader_parameter/threshold = null
+shader_parameter/intensity = null
+shader_parameter/opacity = null
+shader_parameter/glow_color = null
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ls1me"]
+radius = 7.0
+height = 40.0
+
+[node name="Missile" type="Area2D"]
+collision_layer = 8
+collision_mask = 5
+script = ExtResource("1_pisyb")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_631tl")
+position = Vector2(5.96046e-08, -20)
+scale = Vector2(0.4, 0.4)
+texture = ExtResource("2_bwobb")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -20)
+shape = SubResource("CapsuleShape2D_ls1me")
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
+position = Vector2(-2.38419e-07, -20)
+scale = Vector2(0.7, 1.9875)
+
+[node name="ProjectileComponent" parent="." instance=ExtResource("3_12tpj")]
+speed = 375.0
+damage = 2.0
+is_player_projectile = true
+bullet_life = 1.25
+
+[node name="HomingArea" type="Area2D" parent="."]
+
+[node name="HomingRange" type="CollisionPolygon2D" parent="HomingArea"]
+position = Vector2(23, -71)
+rotation = -3.14159
+polygon = PackedVector2Array(-24, 2.00001, 23, -31, 70, 2.99999, 23, 3)
+
+[node name="FireTrail" type="GPUParticles2D" parent="."]
+show_behind_parent = true
+scale = Vector2(0.25, 0.25)
+amount = 30
+process_material = ExtResource("4_1jwbc")
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
+[connection signal="screen_exited" from="VisibleOnScreenNotifier2D" to="." method="_on_visible_on_screen_notifier_2d_screen_exited"]
+[connection signal="area_entered" from="HomingArea" to="." method="_on_homing_area_area_entered"]

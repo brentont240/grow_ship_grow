@@ -1,0 +1,106 @@
+[gd_scene load_steps=13 format=3 uid="uid://l53wov061e4r"]
+
+[ext_resource type="Script" path="res://entities/mobs/shipMob.gd" id="1_nfqox"]
+[ext_resource type="Shader" uid="uid://crdcgh67eujs5" path="res://assets/materials/hitflash.tres" id="2_kdb6b"]
+[ext_resource type="Texture2D" uid="uid://dipm44f062qta" path="res://assets/art/enemyShip.png" id="3_tdl7b"]
+[ext_resource type="Material" uid="uid://o2g4mrscfsd6" path="res://assets/materials/shipFire.tres" id="4_pe4cl"]
+[ext_resource type="PackedScene" uid="uid://jt2jw82tykvy" path="res://components/hitBoxComponent.tscn" id="5_rsnsq"]
+[ext_resource type="PackedScene" uid="uid://cge32so1yiaqt" path="res://components/healthComponent.tscn" id="6_mh4xc"]
+[ext_resource type="PackedScene" uid="uid://bly45v53dam2p" path="res://components/mobComponent.tscn" id="7_blmqc"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_5eh38"]
+resource_local_to_scene = true
+shader = ExtResource("2_kdb6b")
+shader_parameter/enabled = false
+shader_parameter/Tint = Color(1, 1, 1, 1)
+
+[sub_resource type="Animation" id="Animation_05on3"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:material:shader_parameter/enabled")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="Animation" id="Animation_pceua"]
+resource_name = "hit_flash"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:material:shader_parameter/enabled")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_fekng"]
+_data = {
+"RESET": SubResource("Animation_05on3"),
+"hit_flash": SubResource("Animation_pceua")
+}
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_kcn8w"]
+radius = 14.0
+height = 46.0
+
+[node name="ShipMob" type="Area2D"]
+collision_layer = 4
+collision_mask = 10
+script = ExtResource("1_nfqox")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_5eh38")
+position = Vector2(0, -23)
+scale = Vector2(0.6, 0.6)
+texture = ExtResource("3_tdl7b")
+
+[node name="FireTrail" type="GPUParticles2D" parent="."]
+show_behind_parent = true
+process_material = ExtResource("4_pe4cl")
+
+[node name="HitFlashAnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_fekng")
+}
+
+[node name="HitboxComponent" parent="." node_paths=PackedStringArray("health_component") instance=ExtResource("5_rsnsq")]
+health_component = NodePath("../HealthComponent")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitboxComponent"]
+position = Vector2(0, -23)
+shape = SubResource("CapsuleShape2D_kcn8w")
+
+[node name="HealthComponent" parent="." instance=ExtResource("6_mh4xc")]
+
+[node name="MobComponent" parent="." node_paths=PackedStringArray("health_component") instance=ExtResource("7_blmqc")]
+health_component = NodePath("../HealthComponent")
+speed_min = 65.0
+speed_max = 250.0
+scale_min = 0.8
+scale_max = 1.5
+drop_probability = 8
+mob_type = 2
+can_change_direction = true
+direction_timer = 5.5
+
+[node name="Muzzle" type="Node2D" parent="."]
+position = Vector2(0, -52)
+
+[node name="ShootTimer" type="Timer" parent="."]
+wait_time = 4.0
+autostart = true
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="timeout" from="ShootTimer" to="." method="_on_shoot_timer_timeout"]

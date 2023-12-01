@@ -1,0 +1,83 @@
+[gd_scene load_steps=7 format=3 uid="uid://bsr1m4cc4qyj2"]
+
+[ext_resource type="Script" path="res://entities/projectiles/laser.gd" id="1_ydm1p"]
+[ext_resource type="Texture2D" uid="uid://wwtf1ljrpq2k" path="res://assets/art/playerLaser2.png" id="2_hmd8n"]
+[ext_resource type="PackedScene" uid="uid://0o2jc5x87d5h" path="res://components/projectileComponent.tscn" id="3_d2bc0"]
+
+[sub_resource type="Shader" id="Shader_24k3h"]
+code = "shader_type canvas_item;
+
+uniform vec4 color1 : source_color;
+uniform vec4 color2 : source_color;
+uniform float threshold;
+uniform float intensity;
+uniform float opacity;
+uniform vec4 glow_color : source_color;
+
+void fragment() {
+	// Get the pixel color from the texture
+	vec4 pixel_color = texture(TEXTURE, UV);
+	
+	// Calculate the distance between the pixel color and the first source color
+	float distance = length(pixel_color - color1);
+	
+	// Calculate the distance between the pixel color and the second source color
+	float distance_second = length(pixel_color - color2);
+	
+	// Create a new variable to store the modified glow color
+	vec4 modified_glow_color = glow_color;
+	
+	// Set the alpha value of the modified glow color to the specified opacity
+	modified_glow_color.a = opacity;
+	
+	// If the distance to either source color is below the threshold, set the output color to a blend of the pixel color and the modified glow color
+	if (distance < threshold || distance_second < threshold) {
+		COLOR = mix(pixel_color, modified_glow_color * intensity, modified_glow_color.a);
+	}
+	// Otherwise, set the output color to the pixel color
+	else {
+		COLOR = pixel_color;
+	}
+}"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_631tl"]
+shader = SubResource("Shader_24k3h")
+shader_parameter/color1 = null
+shader_parameter/color2 = null
+shader_parameter/threshold = null
+shader_parameter/intensity = null
+shader_parameter/opacity = null
+shader_parameter/glow_color = null
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ls1me"]
+radius = 3.0
+height = 34.0
+
+[node name="DualLaser" type="Area2D"]
+collision_layer = 8
+collision_mask = 5
+script = ExtResource("1_ydm1p")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_631tl")
+position = Vector2(-9.0683e-13, -19)
+rotation = 4.71239
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("2_hmd8n")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -17)
+shape = SubResource("CapsuleShape2D_ls1me")
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
+position = Vector2(0, -17)
+scale = Vector2(0.35, 1.7)
+
+[node name="ProjectileComponent" parent="." instance=ExtResource("3_d2bc0")]
+speed = 475.0
+damage = 1.0
+is_player_projectile = true
+bullet_life = 1.4
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
+[connection signal="screen_exited" from="VisibleOnScreenNotifier2D" to="." method="_on_visible_on_screen_notifier_2d_screen_exited"]

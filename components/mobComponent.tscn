@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bly45v53dam2p"]
+
+[ext_resource type="Script" path="res://components/mobComponent.gd" id="1_uja4u"]
+
+[node name="MobComponent" type="Node2D"]
+script = ExtResource("1_uja4u")

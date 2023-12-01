@@ -1,0 +1,60 @@
+[gd_scene load_steps=10 format=3 uid="uid://drce6cq7yncin"]
+
+[ext_resource type="Script" path="res://scripts/level.gd" id="1_7vxhj"]
+[ext_resource type="PackedScene" uid="uid://dnhtoatfm73uq" path="res://entities/player/player.tscn" id="2_0ikyv"]
+[ext_resource type="PackedScene" uid="uid://cemdwkvhdvk65" path="res://ui/hud.tscn" id="2_6uwbw"]
+[ext_resource type="PackedScene" uid="uid://d4gg23em8gp4w" path="res://ui/gameOverScreen.tscn" id="3_fk8h8"]
+[ext_resource type="PackedScene" uid="uid://5gb0a30g8h6d" path="res://ui/levelTransition.tscn" id="4_6g8eq"]
+[ext_resource type="AudioStream" uid="uid://dj7tx6ametodp" path="res://assets/audio/level1bgMusic.mp3" id="5_et74b"]
+[ext_resource type="AudioStream" uid="uid://fh5v5va1sxwn" path="res://assets/audio/laserBlast.mp3" id="6_v6xng"]
+[ext_resource type="PackedScene" uid="uid://kx5rjn3v8tc0" path="res://entities/effects/starField.tscn" id="7_e6xcg"]
+
+[sub_resource type="Curve2D" id="Curve2D_nfals"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, -283.863, -211.543, 0, 0, 0, 0, 909.575, -211.543, 0, 0, 0, 0, 909.575, 469.513, 0, 0, 0, 0, -275.576, 469.513, 0, 0, 0, 0, -283.863, -203.03)
+}
+point_count = 5
+
+[node name="Level1" type="Node"]
+script = ExtResource("1_7vxhj")
+growth_limit = 3
+mob_limit = 8
+level = 1
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="HUD" parent="UI" instance=ExtResource("2_6uwbw")]
+
+[node name="GameOverScreen" parent="UI" instance=ExtResource("3_fk8h8")]
+
+[node name="LevelTransition" parent="UI" instance=ExtResource("4_6g8eq")]
+
+[node name="Player" parent="." instance=ExtResource("2_0ikyv")]
+position = Vector2(578, 327)
+
+[node name="Lasers" type="Node" parent="."]
+
+[node name="Mobs" type="Node" parent="."]
+
+[node name="MobPath" type="Path2D" parent="."]
+position = Vector2(274.007, 198.79)
+scale = Vector2(0.965278, 0.939717)
+curve = SubResource("Curve2D_nfals")
+
+[node name="MobSpawnLocation" type="PathFollow2D" parent="MobPath"]
+position = Vector2(-283.863, -211.543)
+
+[node name="SpawnTimer" type="Timer" parent="."]
+wait_time = 2.5
+
+[node name="BackGroundMusic" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_et74b")
+autoplay = true
+
+[node name="LaserSoundEffect" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("6_v6xng")
+volume_db = -10.0
+
+[node name="StarField" parent="." instance=ExtResource("7_e6xcg")]
+
+[connection signal="timeout" from="SpawnTimer" to="." method="_on_spawn_timer_timeout"]

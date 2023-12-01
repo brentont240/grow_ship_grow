@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://drqk64tqo7by8"]
+
+[ext_resource type="Material" uid="uid://q3m21wub1pad" path="res://assets/materials/growEffect.tres" id="1_j0alr"]
+[ext_resource type="Script" path="res://entities/effects/growEffect.gd" id="2_l173f"]
+[ext_resource type="AudioStream" uid="uid://bd0rg8kibwbjj" path="res://assets/audio/growth.mp3" id="3_qlils"]
+
+[node name="GrowEffect" type="GPUParticles2D"]
+show_behind_parent = true
+z_index = -5
+emitting = false
+amount = 75
+process_material = ExtResource("1_j0alr")
+lifetime = 1.75
+one_shot = true
+explosiveness = 0.5
+randomness = 0.5
+script = ExtResource("2_l173f")
+
+[node name="GrowthSoundEffect" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_qlils")
+autoplay = true
